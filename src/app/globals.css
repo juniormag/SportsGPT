@@ -1,26 +1,575 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   SportsGPT Design System
+   Based on Figma layouts and design specifications
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colors from Figma */
+  --background: #000000;
+  --foreground: #ffffff;
+  --content-1: #ffffff;
+  --content-3: #ffffff66; /* 40% opacity white */
+  --content-5: #141414;
+  --border-primary: rgba(255, 255, 255, 0.16);
+  --team-bg: rgba(255, 255, 255, 0.1);
+  --team-bg-hover: rgba(255, 255, 255, 0.15);
+  --team-bg-selected: rgba(255, 255, 255, 0.2);
+  
+  /* Typography from Figma */
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-margem: "Margem Variable", sans-serif;
+  
+  /* Spacing from Figma (converted to rem) */
+  --spacing-container: 2.5rem; /* 40px */
+  --spacing-cards: 2rem 1.5rem; /* 32px 24px */
+  --spacing-gap-large: 3rem; /* 48px */
+  --spacing-gap-medium: 2rem; /* 32px */
+  --spacing-gap-small: 1.1875rem; /* 19px */
+  --spacing-gap-xs: 1rem; /* 16px */
+  
+  /* Layout dimensions from Figma */
+  --container-max-width: 53.125rem; /* 850px */
+  --container-height: 64rem; /* 1024px */
+  --card-height: 10.5625rem; /* 169px */
+  --team-logo-size: 4.41094rem; /* 70.575px */
+  --team-logo-inner: 2.20544rem; /* 35.287px */
+  
+  /* Typography scale from Figma */
+  --text-title: 2rem; /* 32px */
+  --text-question: 1.625rem; /* 26px */
+  --text-button: 0.875rem; /* 14px */
+  
+  /* Letter spacing optimized for readability */
+  --tracking-title: -0.14rem; /* -2.24px - mantido como no Figma */
+  --tracking-question: -0.04rem; /* -0.32px - melhorado para legibilidade */
+  --tracking-button: 0.01rem; /* 0.16px - melhorado para clareza */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Tailwind theme configuration moved to tailwind.config.js */
+
+/* ==========================================================================
+   Base Reset (Selective, not aggressive)
+   ========================================================================== */
+   
+html {
+  box-sizing: border-box;
+  height: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*, *::before, *::after {
+  box-sizing: inherit;
 }
 
 body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Reset only specific elements that need it */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+button {
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   SportsGPT Component Classes
+   ========================================================================== */
+
+/* Main container following Figma structure */
+.sports-gpt-container {
+  padding: var(--spacing-container) !important;
+}
+
+/* Card containers following Figma structure */
+.sports-gpt-card {
+  padding: var(--spacing-cards) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.sports-gpt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.08) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 1.5rem;
+}
+
+.sports-gpt-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.sports-gpt-card:hover::before {
+  opacity: 1;
+}
+
+.sports-gpt-card:active {
+  transform: translateY(-2px) scale(1.01);
+  transition-duration: 0.1s;
+}
+
+.sports-gpt-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+
+/* Question card - simplified and fully clickable */
+.question-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.08) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 1.5rem;
+  z-index: -1;
+}
+
+.question-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.question-card:hover::before {
+  opacity: 1;
+}
+
+.question-card:active {
+  transform: translateY(-2px) scale(1.01);
+  transition-duration: 0.1s;
+}
+
+/* Team logo button - exact Figma specifications */
+.team-logo-button {
+  background: var(--team-bg);
+  padding: 1.10275rem; /* 17.644px */
+  border-radius: 2.20544rem; /* 35.287px */
+  width: var(--team-logo-size);
+  height: var(--team-logo-size);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-logo-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.team-logo-button:hover {
+  background: var(--team-bg-hover);
+  transform: scale(0.85);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.team-logo-button:hover::before {
+  opacity: 1;
+}
+
+.team-logo-button:active {
+  transform: scale(0.78);
+  transition-duration: 0.1s;
+}
+
+.team-logo-button.selected {
+  background: var(--team-bg-selected);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4), 0 6px 25px rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+}
+
+.team-logo-button.selected::before {
+  opacity: 0.7;
+}
+
+.team-logo-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+/* Typography classes matching Figma */
+.text-title-figma {
+  font-family: var(--font-inter);
+  font-weight: 500;
+  font-size: var(--text-title);
+  letter-spacing: var(--tracking-title);
+  line-height: normal;
+  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-question-figma {
+  font-family: var(--font-inter);
+  font-weight: normal;
+  font-size: var(--text-question);
+  letter-spacing: var(--tracking-question);
+  line-height: normal;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-button-figma {
+  font-family: var(--font-margem);
+  font-weight: 400;
+  font-size: var(--text-button);
+  letter-spacing: var(--tracking-button);
+  line-height: 1rem; /* 16px */
+  color: var(--content-5);
+}
+
+/* Border styling from Figma */
+.border-figma {
+  border: 1px solid var(--border-primary);
+}
+
+/* ==========================================================================
+   Animation System
+   ========================================================================== */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-in {
+  animation: slide-in-from-bottom 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-container: 1.5rem; /* 24px on mobile */
+    --spacing-cards: 1.5rem 1rem; /* 24px 16px on mobile */
+    --text-title: 1.75rem; /* 28px on mobile */
+    --text-question: 1.375rem; /* 22px on mobile */
+  }
+}
+
+/* ==========================================================================
+   Button Components
+   ========================================================================== */
+
+/* Send button styling */
+.send-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.send-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.send-button:hover:not(:disabled) {
+  background: #f5f5f5;
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.send-button:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.send-button:active:not(:disabled) {
+  transform: scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.send-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Scroll arrow button styling */
+.scroll-button {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-button:hover:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.scroll-button:hover:not(:disabled) .chevron-icon {
+  transform: translateX(1px);
+}
+
+.scroll-button:active:not(:disabled) {
+  transform: scale(0.9);
+  transition-duration: 0.1s;
+}
+
+.scroll-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.chevron-icon {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Interactive Input Components
+   ========================================================================== */
+
+/* Enhanced input styling */
+.text-question-figma textarea {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  background: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+  background-clip: inherit;
+  color: inherit;
+}
+
+.text-question-figma textarea.input-focused {
+  transform: scale(1.02);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  opacity: 0.6;
+}
+
+.text-question-figma textarea.text-from-suggestion {
+  opacity: 1;
+}
+
+/* Suggestion container styling */
+.suggestion-container {
+  animation: fade-in-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.suggestion-btn {
+  font-family: var(--font-inter);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.01rem;
+  line-height: 1.4;
+  color: #ffffff;
+  opacity: 0.8;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slide-in-stagger 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  -webkit-text-fill-color: #ffffff;
+  background-clip: unset;
+  -webkit-background-clip: unset;
+}
+
+.suggestion-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+/* Enhanced animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in-stagger 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes slide-in-stagger {
+  from {
+    opacity: 0;
+    transform: translateY(4px) translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+.focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.hover-lift {
+  transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.text-gradient-white {
+  background: linear-gradient(to right, #ffffff, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ==========================================================================
+   Chat Container Gradient Border Animation
+   ========================================================================== */
+
+.chat-container {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.chat-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.chat-container.focused::before {
+  opacity: 0.8;
+  animation: elegantGlow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes elegantGlow {
+  0% {
+    opacity: 0;
+    filter: blur(3px);
+    transform: scale(1.02);
+  }
+  30% {
+    opacity: 0.4;
+    filter: blur(1px);
+    transform: scale(1.01);
+  }
+  60% {
+    opacity: 0.7;
+    filter: blur(0px);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.8;
+    filter: blur(0px);
+    transform: scale(1);
+  }
 }

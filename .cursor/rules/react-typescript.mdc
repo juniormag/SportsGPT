@@ -1,0 +1,62 @@
+---
+globs: *.tsx,*.ts
+---
+
+# React TypeScript Standards
+
+## Component Structure
+- Always use `"use client"` directive for client components
+- Use functional components with TypeScript interfaces
+- Export interfaces before component definitions
+- Use proper prop typing with interfaces
+
+## State Management
+- Use `useState` for local component state
+- Use `useEffect` for side effects and lifecycle events
+- Prefer controlled components over uncontrolled ones
+
+## Event Handling
+- Use proper TypeScript event types:
+  - `React.MouseEvent` for click events
+  - `React.ChangeEvent<HTMLInputElement>` for input changes
+  - `React.KeyboardEvent` for keyboard events
+
+## Imports
+- Remove unused imports to avoid build warnings
+- Import React hooks from "react"
+- Import Next.js components from their respective packages
+- Use relative imports for local components
+
+## Code Quality
+- Use meaningful variable and function names
+- Remove unused variables and functions
+- Add proper TypeScript types for all props and state
+- Use optional chaining when accessing nested properties
+
+## Example Component Structure:
+```tsx
+"use client"
+
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+
+interface ComponentProps {
+  title: string
+  onAction?: () => void
+}
+
+export function Component({ title, onAction }: ComponentProps) {
+  const [state, setState] = useState<string>("")
+  
+  const handleClick = () => {
+    onAction?.()
+  }
+  
+  return (
+    <div>
+      <h1>{title}</h1>
+      <Button onClick={handleClick}>Action</Button>
+    </div>
+  )
+}
+```

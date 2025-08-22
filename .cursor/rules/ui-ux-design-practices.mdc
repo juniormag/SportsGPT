@@ -1,0 +1,167 @@
+---
+description: UI/UX Design Best Practices for optimal user experience
+---
+
+# UI/UX Design Best Practices
+
+## Visual Design
+- Establish a clear visual hierarchy to guide user attention
+- Choose a cohesive color palette that reflects the brand (SportsGPT uses black background with white text)
+- Use typography effectively for readability and emphasis (Inter font family)
+- Maintain sufficient contrast for legibility (WCAG 2.1 AA standard)
+- Design with a consistent style across the application
+
+## Interaction Design
+- Create intuitive navigation patterns
+- Use familiar UI components to reduce cognitive load
+- Provide clear calls-to-action to guide user behavior
+- Implement responsive design for cross-device compatibility
+- Use animations judiciously to enhance user experience (transition-all duration-200)
+
+## Accessibility
+- Follow WCAG guidelines for web accessibility
+- Use semantic HTML to enhance screen reader compatibility
+- Provide alternative text for images and non-text content (team logos)
+- Ensure keyboard navigability for all interactive elements
+- Test with various assistive technologies
+
+## Performance Optimization
+- Optimize images and assets to minimize load times
+- Implement lazy loading for non-critical resources
+- Use code splitting to improve initial load performance
+- Monitor and optimize Core Web Vitals (LCP, FID, CLS)
+
+## User Feedback
+- Incorporate clear feedback mechanisms for user actions
+- Use loading indicators for asynchronous operations
+- Provide clear error messages and recovery options
+- Implement analytics to track user behavior and pain points
+
+## Information Architecture
+- Organize content logically to facilitate easy access
+- Use clear labeling and categorization for navigation
+- Implement effective search functionality
+- Create a sitemap to visualize overall structure
+
+## Mobile-First Design
+- Design for mobile devices first, then scale up
+- Use touch-friendly interface elements (44x44px minimum)
+- Implement gestures for common actions (swipe, pinch-to-zoom)
+- Consider thumb zones for important interactive elements
+
+## Consistency
+- Develop and adhere to a design system
+- Use consistent terminology throughout the interface
+- Maintain consistent positioning of recurring elements
+- Ensure visual consistency across different sections
+
+## Testing and Iteration
+- Conduct A/B testing for critical design decisions
+- Use heatmaps and session recordings to analyze user behavior
+- Regularly gather and incorporate user feedback
+- Continuously iterate on designs based on data and feedback
+
+## Documentation
+- Maintain a comprehensive style guide
+- Document design patterns and component usage
+- Create user flow diagrams for complex interactions
+- Keep design assets organized and accessible to the team
+
+## Responsive Design
+
+### Fluid Layouts
+- Use relative units (%, em, rem) instead of fixed pixels
+- Implement CSS Grid and Flexbox for flexible layouts
+- Design with a mobile-first approach, then scale up
+
+### Media Queries
+- Use breakpoints to adjust layouts for different screen sizes
+- Focus on content needs rather than specific devices
+- Test designs across a range of devices and orientations
+
+### Images and Media
+- Use responsive images with srcset and sizes attributes
+- Implement lazy loading for images and videos
+- Use CSS to make embedded media (like iframes) responsive
+
+### Typography
+- Use relative units (em, rem) for font sizes
+- Adjust line heights and letter spacing for readability on small screens
+- Implement a modular scale for consistent typography across breakpoints
+
+### Touch Targets
+- Ensure interactive elements are large enough for touch (min 44x44 pixels)
+- Provide adequate spacing between touch targets
+- Consider hover states for desktop and focus states for touch/keyboard
+
+### Performance
+- Optimize assets for faster loading on mobile networks
+- Use CSS animations instead of JavaScript when possible
+- Implement critical CSS for above-the-fold content
+
+### Content Prioritization
+- Prioritize content display for mobile views
+- Use progressive disclosure to reveal content as needed
+- Implement off-canvas patterns for secondary content on small screens
+
+### Navigation
+- Design mobile-friendly navigation patterns (e.g., hamburger menu)
+- Ensure navigation is accessible via keyboard and screen readers
+- Consider using a sticky header for easy navigation access
+
+### Forms
+- Design form layouts that adapt to different screen sizes
+- Use appropriate input types for better mobile experiences
+- Implement inline validation and clear error messaging
+
+### Testing
+- Use browser developer tools to test responsiveness
+- Test on actual devices, not just emulators
+- Conduct usability testing across different device types
+
+## SportsGPT Specific Guidelines
+
+### Brand Colors
+- Primary background: `#000000` (black)
+- Primary text: `#ffffff` (white)
+- Accent colors: `rgba(255,255,255,0.1)` for backgrounds
+- Opacity variations: `text-white/60`, `bg-white/10`
+
+### Typography Scale
+- Title: 32px (`text-[32px]`) with tracking `[-2.24px]`
+- Input text: 26px (`text-[26px]`) with tracking `[-1.82px]`
+- Card text: 22px-26px responsive (`text-[22px] lg:text-[26px]`)
+- Button text: 14px (`text-[14px]`) with tracking `[-0.5px]`
+
+### Interactive Elements
+- Hover effects: `hover:scale-105`, `hover:bg-white/90`
+- Transitions: `transition-all duration-200`
+- Focus states: `focus:ring-0`, `focus-visible:outline-none`
+- Disabled states: `disabled:opacity-50`
+
+### Spacing System
+- Container padding: 32px (`p-[32px]`)
+- Element gaps: 19px (`gap-[19px]`)
+- Margin bottom: 32px (`mb-[32px]`) for sections
+- Border radius: rounded-3xl for containers
+
+### Component Standards
+- Team logos: 70.575px containers with proper hover states
+- Buttons: specific dimensions (105px x 41px for primary)
+- Cards: minimum height 169px with proper spacing
+- Borders: `border-[rgba(255,255,255,0.16)]` for containers
+
+### Best Practices Checklist
+- [ ] All interactive elements are touch-friendly (44px+)
+- [ ] Sufficient color contrast (4.5:1 minimum)
+- [ ] Responsive behavior tested on multiple devices
+- [ ] Keyboard navigation works for all elements
+- [ ] Loading states implemented for async operations
+- [ ] Error states provide clear recovery options
+- [ ] Images have proper alt text
+- [ ] Typography scales appropriately across breakpoints
+- [ ] Animations enhance rather than distract
+- [ ] Performance metrics meet acceptable thresholds
+
+Stay updated with the latest responsive design techniques and browser capabilities.
+Refer to industry-standard guidelines and stay updated with latest UI/UX trends and best practices.

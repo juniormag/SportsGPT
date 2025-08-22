@@ -1,0 +1,33 @@
+---
+alwaysApply: true
+---
+
+# SportsGPT Project Structure
+
+## Overview
+SportsGPT is a Next.js 15 application with TypeScript and Tailwind CSS v4, designed for sports betting assistance.
+
+## Main Files
+- [src/app/page.tsx](mdc:src/app/page.tsx) - Main entry point with view state management
+- [src/app/globals.css](mdc:src/app/globals.css) - Global styles and Tailwind configuration
+- [next.config.ts](mdc:next.config.ts) - Next.js configuration with SVG support
+
+## Key Components
+- [src/components/landing-page.tsx](mdc:src/components/landing-page.tsx) - Main landing page with team selection
+- [src/components/chat-interface.tsx](mdc:src/components/chat-interface.tsx) - Chat conversation interface
+- [src/components/team-logos.tsx](mdc:src/components/team-logos.tsx) - Team logo components and mappings
+- [src/components/loading-spinner.tsx](mdc:src/components/loading-spinner.tsx) - Page transitions
+
+## UI Components
+- [src/components/ui/button.tsx](mdc:src/components/ui/button.tsx) - ShadcnUI button component
+- [src/components/ui/card.tsx](mdc:src/components/ui/card.tsx) - ShadcnUI card component
+
+## Assets
+- Team logos are stored in `public/logos/clubes/` directory as SVG files
+- Logos follow naming convention: `team-name.svg` (lowercase, hyphenated)
+
+## Design System
+- Uses Inter font family
+- Black background (#000000) with white text
+- Precise spacing following Figma measurements
+- Responsive design with mobile-first approach

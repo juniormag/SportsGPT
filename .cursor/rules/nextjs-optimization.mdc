@@ -1,0 +1,53 @@
+---
+globs: *.tsx,*.ts,next.config.ts
+---
+
+# Next.js 15 Optimization
+
+## Configuration
+- Use Turbopack for faster development builds
+- Configure SVG support in [next.config.ts](mdc:next.config.ts)
+- Enable `dangerouslyAllowSVG` for team logos
+- Set proper content security policies
+
+## Image Optimization
+- Use `next/image` for all images, including SVGs
+- Specify width and height for proper sizing
+- Use `alt` attributes for accessibility
+- Configure image domains if needed
+
+## Performance Best Practices
+- Use dynamic imports for heavy components
+- Implement proper loading states
+- Minimize bundle size by removing unused code
+- Use `use client` directive only when necessary
+
+## Build Optimization
+- Fix all TypeScript errors before deployment
+- Remove unused imports and variables
+- Use proper dependency arrays in useEffect
+- Avoid React Hook warnings
+
+## SEO and Meta
+- Update page titles and meta descriptions
+- Use proper semantic HTML structure
+- Include favicon and app icons
+- Configure robots.txt if needed
+
+## Error Handling
+- Implement proper error boundaries
+- Handle loading and error states
+- Provide meaningful error messages
+- Use Next.js error pages when appropriate
+
+## Development Workflow
+- Use `npm run dev` for development
+- Use `npm run build` to check for errors
+- Fix linting warnings before deployment
+- Test responsive behavior on different devices
+
+## File Organization
+- Keep components in `src/components/`
+- Use proper imports with `@/` alias
+- Organize assets in `public/` directory
+- Follow consistent naming conventions
