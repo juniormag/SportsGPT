@@ -226,7 +226,7 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
                 {/* Sugestões animadas */}
                 {showSuggestions && (
                   <div className="absolute top-full left-0 right-0 mt-2 z-50">
-                    <div className="suggestion-container bg-black/95 backdrop-blur-sm border border-white/10 rounded-2xl p-3 space-y-1">
+                    <div className="suggestion-container bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-3 space-y-1">
                       {inputSuggestions
                         .filter(suggestion => suggestion !== inputQuestion)
                         .slice(0, 3)
