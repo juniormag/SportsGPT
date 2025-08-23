@@ -277,15 +277,15 @@ img {
   border-radius: 1.5rem;
   z-index: 1;
   box-shadow: 
-    0 0 0 1px #ffffff,
-    0 0 0 2px #B0B7CF,
-    0 0 0 3px #FFE583,
-    0 0 0 4px #0a0a0a,
-    0 0 25px rgba(255, 255, 255, 0.2),
-    0 0 50px rgba(176, 183, 207, 0.15),
-    0 0 75px rgba(255, 229, 131, 0.1),
-    0 0 100px rgba(10, 10, 10, 0.15),
-    0 10px 40px rgba(255, 255, 255, 0.15);
+    0 0 0 0.5px #ffffff,
+    0 0 0 1px #B0B7CF,
+    0 0 0 1.5px #FFE583,
+    0 0 0 2px #0a0a0a,
+    0 0 15px rgba(255, 255, 255, 0.15),
+    0 0 30px rgba(176, 183, 207, 0.1),
+    0 0 45px rgba(255, 229, 131, 0.08),
+    0 0 60px rgba(10, 10, 10, 0.1),
+    0 6px 24px rgba(255, 255, 255, 0.08);
   animation: elegantContainerGlow 0.8s cubic-bezier(0.4, 0, 0.2, 1), rotatingGradient 3s linear infinite;
 }
 
@@ -305,54 +305,54 @@ img {
   }
   25% {
     box-shadow: 
-      0 0 0 0.5px rgba(255, 255, 255, 0.6),
-      0 0 0 1px rgba(176, 183, 207, 0.5),
-      0 0 0 1.5px rgba(255, 229, 131, 0.4),
-      0 0 0 2px rgba(10, 10, 10, 0.3),
-      0 0 15px rgba(255, 255, 255, 0.15),
-      0 0 30px rgba(176, 183, 207, 0.12),
-      0 0 45px rgba(255, 229, 131, 0.08),
-      0 0 60px rgba(10, 10, 10, 0.1),
-      0 5px 20px rgba(255, 255, 255, 0.1);
+      0 0 0 0.25px rgba(255, 255, 255, 0.5),
+      0 0 0 0.5px rgba(176, 183, 207, 0.4),
+      0 0 0 0.75px rgba(255, 229, 131, 0.3),
+      0 0 0 1px rgba(10, 10, 10, 0.2),
+      0 0 8px rgba(255, 255, 255, 0.1),
+      0 0 16px rgba(176, 183, 207, 0.08),
+      0 0 24px rgba(255, 229, 131, 0.06),
+      0 0 32px rgba(10, 10, 10, 0.08),
+      0 3px 12px rgba(255, 255, 255, 0.06);
     transform: scale(1.002);
   }
   50% {
     box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.8),
-      0 0 0 2px rgba(176, 183, 207, 0.6),
-      0 0 0 3px rgba(255, 229, 131, 0.5),
-      0 0 0 4px rgba(10, 10, 10, 0.4),
-      0 0 25px rgba(255, 255, 255, 0.2),
-      0 0 50px rgba(176, 183, 207, 0.15),
-      0 0 75px rgba(255, 229, 131, 0.1),
-      0 0 100px rgba(10, 10, 10, 0.15),
-      0 10px 40px rgba(255, 255, 255, 0.15);
+      0 0 0 0.5px rgba(255, 255, 255, 0.6),
+      0 0 0 1px rgba(176, 183, 207, 0.4),
+      0 0 0 1.5px rgba(255, 229, 131, 0.3),
+      0 0 0 2px rgba(10, 10, 10, 0.25),
+      0 0 15px rgba(255, 255, 255, 0.15),
+      0 0 30px rgba(176, 183, 207, 0.1),
+      0 0 45px rgba(255, 229, 131, 0.08),
+      0 0 60px rgba(10, 10, 10, 0.1),
+      0 6px 24px rgba(255, 255, 255, 0.08);
     transform: scale(1.003);
   }
   75% {
     box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.9),
-      0 0 0 2px rgba(176, 183, 207, 0.7),
-      0 0 0 3px rgba(255, 229, 131, 0.6),
-      0 0 0 4px rgba(10, 10, 10, 0.5),
-      0 0 30px rgba(255, 255, 255, 0.25),
-      0 0 60px rgba(176, 183, 207, 0.2),
-      0 0 90px rgba(255, 229, 131, 0.15),
-      0 0 120px rgba(10, 10, 10, 0.2),
-      0 12px 48px rgba(255, 255, 255, 0.18);
+      0 0 0 0.5px rgba(255, 255, 255, 0.7),
+      0 0 0 1px rgba(176, 183, 207, 0.5),
+      0 0 0 1.5px rgba(255, 229, 131, 0.4),
+      0 0 0 2px rgba(10, 10, 10, 0.3),
+      0 0 18px rgba(255, 255, 255, 0.18),
+      0 0 36px rgba(176, 183, 207, 0.12),
+      0 0 54px rgba(255, 229, 131, 0.1),
+      0 0 72px rgba(10, 10, 10, 0.15),
+      0 8px 32px rgba(255, 255, 255, 0.1);
     transform: scale(1.002);
   }
   100% {
     box-shadow: 
-      0 0 0 1px #ffffff,
-      0 0 0 2px #B0B7CF,
-      0 0 0 3px #FFE583,
-      0 0 0 4px #0a0a0a,
-      0 0 25px rgba(255, 255, 255, 0.2),
-      0 0 50px rgba(176, 183, 207, 0.15),
-      0 0 75px rgba(255, 229, 131, 0.1),
-      0 0 100px rgba(10, 10, 10, 0.15),
-      0 10px 40px rgba(255, 255, 255, 0.15);
+      0 0 0 0.5px #ffffff,
+      0 0 0 1px #B0B7CF,
+      0 0 0 1.5px #FFE583,
+      0 0 0 2px #0a0a0a,
+      0 0 15px rgba(255, 255, 255, 0.15),
+      0 0 30px rgba(176, 183, 207, 0.1),
+      0 0 45px rgba(255, 229, 131, 0.08),
+      0 0 60px rgba(10, 10, 10, 0.1),
+      0 6px 24px rgba(255, 255, 255, 0.08);
     transform: scale(1);
   }
 }
@@ -361,78 +361,78 @@ img {
 @keyframes rotatingGradient {
   0% {
     box-shadow: 
-      0 0 0 1px #ffffff,
-      0 0 0 2px #B0B7CF,
-      0 0 0 3px #FFE583,
-      0 0 0 4px #0a0a0a,
-      0 0 25px rgba(255, 255, 255, 0.2),
-      0 0 50px rgba(176, 183, 207, 0.15),
-      0 0 75px rgba(255, 229, 131, 0.1),
-      0 0 100px rgba(10, 10, 10, 0.15),
-      0 10px 40px rgba(255, 255, 255, 0.15);
+      0 0 0 0.5px #ffffff,
+      0 0 0 1px #B0B7CF,
+      0 0 0 1.5px #FFE583,
+      0 0 0 2px #0a0a0a,
+      0 0 15px rgba(255, 255, 255, 0.15),
+      0 0 30px rgba(176, 183, 207, 0.1),
+      0 0 45px rgba(255, 229, 131, 0.08),
+      0 0 60px rgba(10, 10, 10, 0.1),
+      0 6px 24px rgba(255, 255, 255, 0.08);
   }
   25% {
     box-shadow: 
-      0 0 0 1px #0a0a0a,
-      0 0 0 2px #ffffff,
-      0 0 0 3px #B0B7CF,
-      0 0 0 4px #FFE583,
-      0 0 25px rgba(10, 10, 10, 0.2),
-      0 0 50px rgba(255, 255, 255, 0.15),
-      0 0 75px rgba(176, 183, 207, 0.1),
-      0 0 100px rgba(255, 229, 131, 0.15),
-      0 10px 40px rgba(10, 10, 10, 0.15);
+      0 0 0 0.5px #0a0a0a,
+      0 0 0 1px #ffffff,
+      0 0 0 1.5px #B0B7CF,
+      0 0 0 2px #FFE583,
+      0 0 15px rgba(10, 10, 10, 0.15),
+      0 0 30px rgba(255, 255, 255, 0.1),
+      0 0 45px rgba(176, 183, 207, 0.08),
+      0 0 60px rgba(255, 229, 131, 0.1),
+      0 6px 24px rgba(10, 10, 10, 0.08);
   }
   50% {
     box-shadow: 
-      0 0 0 1px #FFE583,
-      0 0 0 2px #0a0a0a,
-      0 0 0 3px #ffffff,
-      0 0 0 4px #B0B7CF,
-      0 0 25px rgba(255, 229, 131, 0.2),
-      0 0 50px rgba(10, 10, 10, 0.15),
-      0 0 75px rgba(255, 255, 255, 0.1),
-      0 0 100px rgba(176, 183, 207, 0.15),
-      0 10px 40px rgba(255, 229, 131, 0.15);
+      0 0 0 0.5px #FFE583,
+      0 0 0 1px #0a0a0a,
+      0 0 0 1.5px #ffffff,
+      0 0 0 2px #B0B7CF,
+      0 0 15px rgba(255, 229, 131, 0.15),
+      0 0 30px rgba(10, 10, 10, 0.1),
+      0 0 45px rgba(255, 255, 255, 0.08),
+      0 0 60px rgba(176, 183, 207, 0.1),
+      0 6px 24px rgba(255, 229, 131, 0.08);
   }
   75% {
     box-shadow: 
-      0 0 0 1px #B0B7CF,
-      0 0 0 2px #FFE583,
-      0 0 0 3px #0a0a0a,
-      0 0 0 4px #ffffff,
-      0 0 25px rgba(176, 183, 207, 0.2),
-      0 0 50px rgba(255, 229, 131, 0.15),
-      0 0 75px rgba(10, 10, 10, 0.1),
-      0 0 100px rgba(255, 255, 255, 0.15),
-      0 10px 40px rgba(176, 183, 207, 0.15);
+      0 0 0 0.5px #B0B7CF,
+      0 0 0 1px #FFE583,
+      0 0 0 1.5px #0a0a0a,
+      0 0 0 2px #ffffff,
+      0 0 15px rgba(176, 183, 207, 0.15),
+      0 0 30px rgba(255, 229, 131, 0.1),
+      0 0 45px rgba(10, 10, 10, 0.08),
+      0 0 60px rgba(255, 255, 255, 0.1),
+      0 6px 24px rgba(176, 183, 207, 0.08);
   }
   100% {
     box-shadow: 
-      0 0 0 1px #ffffff,
-      0 0 0 2px #B0B7CF,
-      0 0 0 3px #FFE583,
-      0 0 0 4px #0a0a0a,
-      0 0 25px rgba(255, 255, 255, 0.2),
-      0 0 50px rgba(176, 183, 207, 0.15),
-      0 0 75px rgba(255, 229, 131, 0.1),
-      0 0 100px rgba(10, 10, 10, 0.15),
-      0 10px 40px rgba(255, 255, 255, 0.15);
+      0 0 0 0.5px #ffffff,
+      0 0 0 1px #B0B7CF,
+      0 0 0 1.5px #FFE583,
+      0 0 0 2px #0a0a0a,
+      0 0 15px rgba(255, 255, 255, 0.15),
+      0 0 30px rgba(176, 183, 207, 0.1),
+      0 0 45px rgba(255, 229, 131, 0.08),
+      0 0 60px rgba(10, 10, 10, 0.1),
+      0 6px 24px rgba(255, 255, 255, 0.08);
   }
 }
 
 /* Hover effect for container when input is focused */
 .sports-gpt-container.input-focused:hover .border-figma {
   box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 1),
-    0 0 0 2px rgba(176, 183, 207, 0.95),
-    0 0 0 3px rgba(255, 229, 131, 0.9),
-    0 0 0 4px rgba(10, 10, 10, 0.8),
-    0 0 30px rgba(255, 255, 255, 0.3),
-    0 0 60px rgba(176, 183, 207, 0.25),
-    0 0 90px rgba(255, 229, 131, 0.2),
-    0 0 120px rgba(10, 10, 10, 0.25),
-    0 12px 48px rgba(255, 255, 255, 0.2);
+    0 0 0 0.5px rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(176, 183, 207, 0.8),
+    0 0 0 1.5px rgba(255, 229, 131, 0.7),
+    0 0 0 2px rgba(10, 10, 10, 0.6),
+    0 0 20px rgba(255, 255, 255, 0.2),
+    0 0 40px rgba(176, 183, 207, 0.15),
+    0 0 60px rgba(255, 229, 131, 0.12),
+    0 0 80px rgba(10, 10, 10, 0.18),
+    0 8px 32px rgba(255, 255, 255, 0.12);
   transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: elegantContainerGlow 0.8s cubic-bezier(0.4, 0, 0.2, 1), rotatingGradient 2s linear infinite;
 }
@@ -620,7 +620,7 @@ img {
 
 .text-question-figma textarea.input-focused {
   transform: scale(1.01);
-  opacity: 1 !important;
+  opacity: 0.6 !important;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
