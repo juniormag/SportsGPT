@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 // Team IDs and their corresponding logo file names
@@ -38,7 +39,7 @@ export function TeamLogo({ teamId, isSelected, onClick, className = "" }: TeamLo
   }
 
   return (
-    <button
+    <motion.button
       onClick={onClick}
       className={cn(
         "team-logo-button flex items-center justify-center overflow-clip relative shrink-0",
@@ -46,8 +47,29 @@ export function TeamLogo({ teamId, isSelected, onClick, className = "" }: TeamLo
         className
       )}
       title={teamId.charAt(0).toUpperCase() + teamId.slice(1).replace('-', ' ')}
+      whileHover={{ 
+        scale: 0.85,
+        transition: { duration: 0.2, ease: [0.25, 0.25, 0, 1] }
+      }}
+      whileTap={{ 
+        scale: 0.78,
+        transition: { duration: 0.1 }
+      }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ 
+        duration: 0.4, 
+        ease: [0.25, 0.25, 0, 1],
+        delay: Math.random() * 0.2 
+      }}
     >
-      <div className="h-[var(--team-logo-inner)] relative shrink-0 w-[var(--team-logo-inner)]">
+      <motion.div 
+        className="h-[var(--team-logo-inner)] relative shrink-0 w-[var(--team-logo-inner)]"
+        whileHover={{ 
+          rotate: [0, -5, 5, 0],
+          transition: { duration: 0.4, ease: [0.25, 0.25, 0, 1] }
+        }}
+      >
         <Image
           src={logoSrc}
           alt={`Logo ${teamId}`}
@@ -56,7 +78,7 @@ export function TeamLogo({ teamId, isSelected, onClick, className = "" }: TeamLo
           className="size-full object-contain"
           priority
         />
-      </div>
-    </button>
+      </motion.div>
+    </motion.button>
   )
 }

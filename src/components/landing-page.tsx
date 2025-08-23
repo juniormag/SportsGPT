@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ChevronRight } from "lucide-react"
+import { motion, AnimatePresence, useInView } from "motion/react"
 import { TeamLogo } from "@/components/team-logos"
 
 interface Team {
@@ -195,12 +196,45 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
 
   return (
     <div className="content-stretch flex flex-col items-start justify-start relative size-full">
-      <div className="bg-[#000000] box-border content-stretch flex flex-col h-[1024px] items-center justify-between overflow-clip pb-10 pt-20 px-10 relative shrink-0 w-full">
+      <div className="bg-[#000000] box-border content-stretch flex flex-col min-h-screen items-center justify-between overflow-visible pb-10 pt-20 px-10 relative shrink-0 w-full">
         <div className="content-stretch flex flex-col gap-12 items-center justify-start relative shrink-0 w-full">
-          <div className="text-title-figma text-center w-full">
-            <p className="text-[200px]">SportsGPT</p>
-          </div>
-          <div className={`flex flex-wrap items-center justify-start max-w-[53.125rem] rounded-3xl w-full relative sports-gpt-container ${isInputFocused ? 'input-focused' : ''}`}>
+          <motion.div 
+            className="text-title-figma text-center w-full"
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 1.2, 
+              ease: [0.25, 0.25, 0, 1],
+              delay: 0.2 
+            }}
+          >
+            <motion.p 
+              className="text-[200px] bg-gradient-to-r from-white via-[#B0B7CF] to-[#FFE583] bg-clip-text text-transparent"
+              initial={{ scale: 0.8, filter: "blur(10px)" }}
+              animate={{ scale: 1, filter: "blur(0px)" }}
+              transition={{ 
+                duration: 1.5, 
+                ease: [0.25, 0.25, 0, 1],
+                delay: 0.4 
+              }}
+            >
+              SportsGPT
+            </motion.p>
+          </motion.div>
+          <motion.div 
+            className={`flex flex-wrap items-center justify-start max-w-[53.125rem] rounded-3xl w-full relative sports-gpt-container ${isInputFocused ? 'input-focused' : ''}`}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ 
+              duration: 0.8, 
+              ease: [0.25, 0.25, 0, 1],
+              delay: 0.8 
+            }}
+            whileHover={!isInputFocused ? { 
+              scale: 1.01,
+              transition: { duration: 0.3, ease: [0.25, 0.25, 0, 1] }
+            } : undefined}
+          >
             <div aria-hidden="true" className="absolute border-figma inset-0 pointer-events-none rounded-3xl" />
             <div className="flex-1 flex flex-col gap-8 relative">
               <div className="text-question-figma w-full relative">
@@ -224,44 +258,73 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
                 />
                 
                 {/* Sugestões animadas */}
-                {showSuggestions && (
-                  <div className="absolute top-full left-0 right-0 mt-2 z-50">
-                    <div className="suggestion-container bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-3 space-y-1">
-                      {inputSuggestions
-                        .filter(suggestion => suggestion !== inputQuestion)
-                        .slice(0, 3)
-                        .map((suggestion, index) => (
-                          <button
-                            key={`suggestion-${suggestion.replace(/[^a-zA-Z0-9]/g, '')}-${index}`}
-                            onMouseDown={(e) => {
-                              e.preventDefault()
-                              
-                              // Prevenir cliques duplos para esta sugestão específica
-                              const suggestionId = `suggestion-${suggestion.replace(/[^a-zA-Z0-9]/g, '')}-${index}`
-                              if (processingCards.has(suggestionId)) return
-                              
-                              // Adicionar sugestão ao set de processamento
-                              setProcessingCards(prev => new Set(prev).add(suggestionId))
-                              handleSuggestionSelect(suggestion)
-                              
-                              // Reset após delay
-                              setTimeout(() => {
-                                setProcessingCards(prev => {
-                                  const newSet = new Set(prev)
-                                  newSet.delete(suggestionId)
-                                  return newSet
-                                })
-                              }, 1000)
-                            }}
-                            className="suggestion-btn w-full text-left p-3 rounded-xl"
-                            style={{ animationDelay: `${index * 50}ms` }}
-                          >
-                            {suggestion}
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {showSuggestions && (
+                    <motion.div 
+                      className="absolute top-full left-0 right-0 mt-2 z-50"
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ 
+                        duration: 0.3, 
+                        ease: [0.25, 0.25, 0, 1] 
+                      }}
+                    >
+                      <motion.div 
+                        className="suggestion-container bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-3 space-y-1"
+                        initial={{ backdropFilter: "blur(0px)" }}
+                        animate={{ backdropFilter: "blur(16px)" }}
+                        transition={{ duration: 0.4, delay: 0.1 }}
+                      >
+                        {inputSuggestions
+                          .filter(suggestion => suggestion !== inputQuestion)
+                          .slice(0, 3)
+                          .map((suggestion, index) => (
+                            <motion.button
+                              key={`suggestion-${suggestion.replace(/[^a-zA-Z0-9]/g, '')}-${index}`}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -20 }}
+                              transition={{ 
+                                duration: 0.3, 
+                                ease: [0.25, 0.25, 0, 1],
+                                delay: index * 0.05 
+                              }}
+                              whileHover={{ 
+                                x: 4, 
+                                backgroundColor: "rgba(255, 255, 255, 0.08)",
+                                transition: { duration: 0.2 }
+                              }}
+                              whileTap={{ scale: 0.98 }}
+                              onMouseDown={(e) => {
+                                e.preventDefault()
+                                
+                                // Prevenir cliques duplos para esta sugestão específica
+                                const suggestionId = `suggestion-${suggestion.replace(/[^a-zA-Z0-9]/g, '')}-${index}`
+                                if (processingCards.has(suggestionId)) return
+                                
+                                // Adicionar sugestão ao set de processamento
+                                setProcessingCards(prev => new Set(prev).add(suggestionId))
+                                handleSuggestionSelect(suggestion)
+                                
+                                // Reset após delay
+                                setTimeout(() => {
+                                  setProcessingCards(prev => {
+                                    const newSet = new Set(prev)
+                                    newSet.delete(suggestionId)
+                                    return newSet
+                                  })
+                                }, 1000)
+                              }}
+                              className="suggestion-btn w-full text-left p-3 rounded-xl"
+                            >
+                              {suggestion}
+                            </motion.button>
+                          ))}
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <div className="content-stretch flex gap-[19px] items-center justify-start relative shrink-0 w-full">
                 <div className="basis-0 grow h-[70.722px] min-h-px min-w-px overflow-clip relative shrink-0">
@@ -301,12 +364,37 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-        <div className="content-stretch flex gap-[24px] items-center justify-start relative shrink-0 w-full">
-          {questionCards.map((card) => (
-            <div
+        <motion.div 
+          className="content-stretch flex gap-[24px] items-center justify-start relative shrink-0 w-full"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.8, 
+            ease: [0.25, 0.25, 0, 1],
+            delay: 1.2 
+          }}
+        >
+          {questionCards.map((card, index) => (
+            <motion.div
               key={card.id}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ 
+                duration: 0.6, 
+                ease: [0.25, 0.25, 0, 1],
+                delay: 1.4 + (index * 0.1) 
+              }}
+              whileHover={{ 
+                scale: 1.02, 
+                y: -5,
+                transition: { duration: 0.2, ease: [0.25, 0.25, 0, 1] }
+              }}
+              whileTap={{ 
+                scale: 0.98,
+                transition: { duration: 0.1 }
+              }}
               onMouseDown={(e) => {
                 e.preventDefault()
                 
@@ -331,7 +419,6 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
                 height: '10.5625rem', /* 169px - altura fixa do card */
                 minHeight: '10.5625rem',
                 padding: '2rem 1.5rem',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 overflow: 'hidden',
                 border: '1px solid rgba(255, 255, 255, 0.16)',
                 background: 'transparent',
@@ -344,9 +431,9 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
               <p className="text-question-figma leading-[normal] w-full text-left">
                 {card.question}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   )

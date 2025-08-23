@@ -232,6 +232,51 @@ img {
   color: transparent;
 }
 
+/* Ensure title is always visible */
+.text-title-figma p {
+  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+/* Fallback for title visibility */
+.text-title-figma p.bg-gradient-to-r {
+  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+/* Direct title styling to ensure visibility */
+p.text-\[200px\] {
+  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  z-index: 10 !important;
+  position: relative !important;
+  font-weight: 600 !important;
+}
+
+
+
 .text-question-figma {
   font-family: var(--font-inter);
   font-weight: normal;
