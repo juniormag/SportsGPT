@@ -99,12 +99,12 @@ img {
 
 /* Main container following Figma structure */
 .sports-gpt-container {
-  padding: var(--spacing-container) !important;
+  padding: var(--spacing-container);
 }
 
 /* Card containers following Figma structure */
 .sports-gpt-card {
-  padding: var(--spacing-cards) !important;
+  padding: var(--spacing-cards);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
@@ -218,7 +218,11 @@ img {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
-/* Typography classes matching Figma */
+/* ==========================================================================
+   Typography System - High Specificity for Gradient Text
+   ========================================================================== */
+
+/* Base title styling with gradient */
 .text-title-figma {
   font-family: var(--font-inter);
   font-weight: 500;
@@ -232,51 +236,36 @@ img {
   color: transparent;
 }
 
-/* Ensure title is always visible */
+/* Enhanced specificity for title paragraphs */
 .text-title-figma p {
-  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  color: transparent !important;
-  display: block !important;
-  width: 100% !important;
-  text-align: center !important;
-  z-index: 10 !important;
-  position: relative !important;
+  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: block;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  position: relative;
 }
 
-/* Fallback for title visibility */
-.text-title-figma p.bg-gradient-to-r {
-  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  color: transparent !important;
-  display: block !important;
-  width: 100% !important;
-  text-align: center !important;
-  z-index: 10 !important;
-  position: relative !important;
+/* Specific styling for the main title text */
+.text-title-figma p.text-\[200px\] {
+  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: block;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  position: relative;
+  font-weight: 500;
 }
 
-/* Direct title styling to ensure visibility */
-p.text-\[200px\] {
-  background: linear-gradient(90deg, #ffffff 19%, #B0B7CF 50%, #FFE583 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  color: transparent !important;
-  display: block !important;
-  width: 100% !important;
-  text-align: center !important;
-  z-index: 10 !important;
-  position: relative !important;
-  font-weight: 600 !important;
-}
-
-
-
+/* Question text styling */
 .text-question-figma {
   font-family: var(--font-inter);
   font-weight: normal;
@@ -290,16 +279,24 @@ p.text-\[200px\] {
   color: transparent;
 }
 
-/* Override for textarea to ensure text visibility */
-.text-question-figma textarea,
-.text-question-figma textarea * {
-  background: transparent !important;
-  -webkit-background-clip: unset !important;
-  background-clip: unset !important;
-  -webkit-text-fill-color: #ffffff !important;
-  color: #ffffff !important;
+/* Enhanced specificity for textarea elements */
+.text-question-figma textarea {
+  background: transparent;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  -webkit-text-fill-color: #ffffff;
+  color: #ffffff;
+  font-family: var(--font-inter);
+  font-size: var(--text-question);
+  font-weight: normal;
+  letter-spacing: var(--tracking-question);
+  line-height: normal;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  position: relative;
 }
 
+/* Button text styling */
 .text-button-figma {
   font-family: var(--font-margem);
   font-weight: 400;
@@ -307,6 +304,25 @@ p.text-\[200px\] {
   letter-spacing: var(--tracking-button);
   line-height: 1rem; /* 16px */
   color: var(--content-5);
+}
+
+/* ==========================================================================
+   Input and Interactive Elements
+   ========================================================================== */
+
+/* Enhanced input styling with proper specificity */
+.text-question-figma textarea.input-focused {
+  transform: scale(1.01);
+  opacity: 0.6;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.text-question-figma textarea.text-from-suggestion {
+  opacity: 1;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 /* Border styling from Figma */
@@ -645,37 +661,6 @@ p.text-\[200px\] {
 /* ==========================================================================
    Interactive Input Components
    ========================================================================== */
-
-/* Enhanced input styling */
-.text-question-figma textarea {
-  font-family: var(--font-inter);
-  font-size: var(--text-question);
-  font-weight: normal;
-  letter-spacing: var(--tracking-question);
-  line-height: normal;
-  background: transparent;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  background-clip: unset !important;
-  -webkit-background-clip: unset !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 10;
-  position: relative;
-}
-
-.text-question-figma textarea.input-focused {
-  transform: scale(1.01);
-  opacity: 0.6 !important;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-.text-question-figma textarea.text-from-suggestion {
-  opacity: 1 !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
 
 /* Suggestion container styling */
 .suggestion-container {
