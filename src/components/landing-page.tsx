@@ -70,7 +70,7 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
   const [selectedTeams, setSelectedTeams] = useState<string[]>([])
   const [currentTeamIndex, setCurrentTeamIndex] = useState(0)
   const [teamsPerView, setTeamsPerView] = useState(7)
-  const [inputQuestion, setInputQuestion] = useState("Quais as melhores oportunidades para a próxima semana?")
+  const [inputQuestion, setInputQuestion] = useState("")
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [inputRef, setInputRef] = useState<HTMLTextAreaElement | null>(null)
@@ -79,7 +79,6 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
   const [processingCards, setProcessingCards] = useState<Set<string>>(new Set())
   
   const defaultPlaceholder = "Quais as melhores oportunidades para a próxima semana?"
-  const isDefaultPlaceholder = inputQuestion === defaultPlaceholder
   
   // Determinar pergunta a ser enviada (input do usuário ou placeholder padrão)
   const questionToSend = inputQuestion.trim() || defaultPlaceholder
@@ -119,10 +118,8 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
     setIsInputFocused(true)
     setShowSuggestions(true)
     
-    // Limpar input apenas se for o placeholder padrão
-    if (isDefaultPlaceholder) {
-      setInputQuestion("")
-    }
+    // Manter o texto atual, mas permitir edição
+    // Se for o texto padrão, permitir que seja substituído
   }
 
   const handleInputBlur = () => {
@@ -203,7 +200,7 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
           <div className="text-title-figma text-center w-full">
             <p className="text-[200px]">SportsGPT</p>
           </div>
-          <div className="flex flex-wrap items-center justify-start max-w-[53.125rem] rounded-3xl w-full relative sports-gpt-container">
+          <div className={`flex flex-wrap items-center justify-start max-w-[53.125rem] rounded-3xl w-full relative sports-gpt-container ${isInputFocused ? 'input-focused' : ''}`}>
             <div aria-hidden="true" className="absolute border-figma inset-0 pointer-events-none rounded-3xl" />
             <div className="flex-1 flex flex-col gap-8 relative">
               <div className="text-question-figma w-full relative">
@@ -217,13 +214,13 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
                   onBlur={handleInputBlur}
                   className={`
                     w-full bg-transparent border-none outline-none resize-none overflow-hidden
-                    text-question-figma placeholder:text-white/60
+                    text-white placeholder:text-white/60 text-[26px] font-normal tracking-[-0.32px]
                     transition-all duration-300 ease-out
                     ${isInputFocused ? 'input-focused' : ''}
                     ${hasSelectedSuggestion ? 'text-from-suggestion' : ''}
                   `}
                   rows={2}
-                  placeholder="Digite sua pergunta sobre apostas esportivas..."
+                  placeholder={defaultPlaceholder}
                 />
                 
                 {/* Sugestões animadas */}

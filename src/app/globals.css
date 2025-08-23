@@ -257,6 +257,28 @@ img {
 /* Border styling from Figma */
 .border-figma {
   border: 1px solid var(--border-primary);
+  transition: border-color 0.3s ease;
+}
+
+/* Container focus effect when input is focused */
+.sports-gpt-container.input-focused .border-figma {
+  border: none;
+  background: #000000;
+  border-radius: 1.5rem;
+  z-index: 1;
+  box-shadow: 
+    0 0 0 1px #ffffff,
+    0 0 0 2px #B0B7CF,
+    0 0 0 3px #FFE583;
+}
+
+@keyframes gradient-border-pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* ==========================================================================
@@ -416,22 +438,21 @@ img {
 
 /* Enhanced input styling */
 .text-question-figma textarea {
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  line-height: inherit;
-  background: inherit;
-  -webkit-background-clip: inherit;
-  -webkit-text-fill-color: inherit;
-  background-clip: inherit;
-  color: inherit;
+  font-family: var(--font-inter);
+  font-size: var(--text-question);
+  font-weight: normal;
+  letter-spacing: var(--tracking-question);
+  line-height: normal;
+  background: transparent;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  background-clip: unset;
+  -webkit-background-clip: unset;
 }
 
 .text-question-figma textarea.input-focused {
   transform: scale(1.02);
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-  opacity: 0.6;
+  opacity: 1;
 }
 
 .text-question-figma textarea.text-from-suggestion {
