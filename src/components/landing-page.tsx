@@ -200,22 +200,30 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
         <div className="content-stretch flex flex-col gap-12 items-center justify-start relative shrink-0 w-full">
           <motion.div 
             className="text-title-figma text-center w-full"
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ 
-              duration: 1.2, 
+              duration: 0.8, 
               ease: [0.25, 0.25, 0, 1],
-              delay: 0.2 
+              delay: 0.3 
             }}
           >
             <motion.p 
               className="text-[200px] bg-gradient-to-r from-white via-[#B0B7CF] to-[#FFE583] bg-clip-text text-transparent"
-              initial={{ scale: 0.8, filter: "blur(10px)" }}
-              animate={{ scale: 1, filter: "blur(0px)" }}
+              initial={{ 
+                opacity: 0,
+                scale: 0.95,
+                filter: "brightness(0.5) blur(2px)"
+              }}
+              animate={{ 
+                opacity: 1,
+                scale: 1,
+                filter: "brightness(1) blur(0px)"
+              }}
               transition={{ 
-                duration: 1.5, 
+                duration: 1.2, 
                 ease: [0.25, 0.25, 0, 1],
-                delay: 0.4 
+                delay: 0.5 
               }}
             >
               SportsGPT
