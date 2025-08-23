@@ -78,14 +78,13 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
   const [hasSelectedSuggestion, setHasSelectedSuggestion] = useState(false)
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false)
   const [processingCards, setProcessingCards] = useState<Set<string>>(new Set())
+  const [isMobile, setIsMobile] = useState(false)
   
   const defaultPlaceholder = "Quais as melhores oportunidades para a próxima semana?"
   
   // Determinar pergunta a ser enviada (input do usuário ou placeholder padrão)
   const questionToSend = inputQuestion.trim() || defaultPlaceholder
   const isButtonDisabled = !questionToSend
-  
-
 
   const handleTeamSelect = (teamId: string) => {
     setSelectedTeams(prev => 
@@ -118,9 +117,6 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
   const handleInputFocus = () => {
     setIsInputFocused(true)
     setShowSuggestions(true)
-    
-    // Manter o texto atual, mas permitir edição
-    // Se for o texto padrão, permitir que seja substituído
   }
 
   const handleInputBlur = () => {
@@ -187,6 +183,7 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
   useEffect(() => {
     const handleResize = () => {
       setTeamsPerView(getTeamsPerView())
+      setIsMobile(window.innerWidth <= 768)
     }
     
     handleResize()
@@ -194,6 +191,249 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Mobile Layout
+  if (isMobile) {
+    return (
+      <div className="content-stretch flex flex-col items-start justify-start relative size-full">
+        <div className="bg-[#000000] box-border content-stretch flex flex-col min-h-screen items-center justify-between overflow-visible pb-10 pt-20 px-4 relative shrink-0 w-full">
+          <div className="content-stretch flex flex-col gap-8 items-center justify-start relative shrink-0 w-full">
+            <motion.div 
+              className="text-title-figma text-center w-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ 
+                duration: 0.8, 
+                ease: [0.25, 0.25, 0, 1],
+                delay: 0.3 
+              }}
+            >
+              <motion.p 
+                className="text-[48px] bg-gradient-to-r from-white via-[#B0B7CF] to-[#FFE583] bg-clip-text text-transparent"
+                initial={{ 
+                  opacity: 0,
+                  scale: 0.95,
+                  filter: "brightness(0.5) blur(2px)"
+                }}
+                animate={{ 
+                  opacity: 1,
+                  scale: 1,
+                  filter: "brightness(1) blur(0px)"
+                }}
+                transition={{ 
+                  duration: 1.2, 
+                  ease: [0.25, 0.25, 0, 1],
+                  delay: 0.5 
+                }}
+              >
+                SportsGPT
+              </motion.p>
+            </motion.div>
+            
+            <motion.div 
+              className={`flex flex-wrap items-center justify-start max-w-full rounded-3xl w-full relative sports-gpt-container ${isInputFocused ? 'input-focused' : ''}`}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ 
+                duration: 0.8, 
+                ease: [0.25, 0.25, 0, 1],
+                delay: 0.8 
+              }}
+              whileHover={!isInputFocused ? { 
+                scale: 1.01,
+                transition: { duration: 0.15, ease: [0.25, 0.25, 0, 1] }
+              } : undefined}
+            >
+              <div aria-hidden="true" className="absolute border-figma inset-0 pointer-events-none rounded-3xl" />
+              <div className="flex-1 flex flex-col gap-6 relative w-full">
+                <div className="text-question-figma w-full relative">
+                  <textarea
+                    ref={setInputRef}
+                    value={inputQuestion}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    className={`
+                      w-full bg-transparent border-none outline-none resize-none overflow-hidden
+                      text-white placeholder:text-white/60 text-[18px] font-normal tracking-[-0.32px]
+                      transition-all duration-300 ease-out
+                      ${isInputFocused ? 'input-focused' : ''}
+                      ${hasSelectedSuggestion ? 'text-from-suggestion' : ''}
+                    `}
+                    rows={2}
+                    placeholder={defaultPlaceholder}
+                  />
+                  
+                  {/* Sugestões animadas */}
+                  <AnimatePresence>
+                    {showSuggestions && (
+                      <motion.div 
+                        className="absolute top-full left-0 right-0 mt-2 z-50"
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ 
+                          duration: 0.3, 
+                          ease: [0.25, 0.25, 0, 1] 
+                        }}
+                      >
+                        <motion.div 
+                          className="suggestion-container bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl p-3 space-y-1"
+                          initial={{ backdropFilter: "blur(0px)" }}
+                          animate={{ backdropFilter: "blur(16px)" }}
+                          transition={{ duration: 0.4, delay: 0.1 }}
+                        >
+                          {inputSuggestions
+                            .filter(suggestion => suggestion !== inputQuestion)
+                            .slice(0, 3)
+                            .map((suggestion, index) => (
+                              <motion.button
+                                key={`suggestion-${suggestion.replace(/[^a-zA-Z0-9]/g, '')}-${index}`}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ 
+                                  duration: 0.3, 
+                                  ease: [0.25, 0.25, 0, 1],
+                                  delay: index * 0.05 
+                                }}
+                                whileHover={{ 
+                                  x: 4, 
+                                  backgroundColor: "rgba(255, 255, 255, 0.08)",
+                                  transition: { duration: 0.2 }
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                onMouseDown={(e) => {
+                                  e.preventDefault()
+                                  
+                                  // Prevenir cliques duplos para esta sugestão específica
+                                  const suggestionId = `suggestion-${suggestion.replace(/[^a-zA-Z0-9]/g, '')}-${index}`
+                                  if (processingCards.has(suggestionId)) return
+                                  
+                                  // Adicionar sugestão ao set de processamento
+                                  setProcessingCards(prev => new Set(prev).add(suggestionId))
+                                  handleSuggestionSelect(suggestion)
+                                  
+                                  // Reset após delay
+                                  setTimeout(() => {
+                                    setProcessingCards(prev => {
+                                      const newSet = new Set(prev)
+                                      newSet.delete(suggestionId)
+                                      return newSet
+                                    })
+                                  }, 1000)
+                                }}
+                                className="suggestion-btn w-full text-left p-3 rounded-xl"
+                              >
+                                {suggestion}
+                              </motion.button>
+                            ))}
+                        </motion.div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+                
+                {/* Teams scroll container - Mobile */}
+                <div className="teams-scroll-container w-full">
+                  {teams.map((team) => (
+                    <TeamLogo
+                      key={team.id}
+                      teamId={team.id}
+                      isSelected={selectedTeams.includes(team.id)}
+                      onClick={() => handleTeamClick(team.id)}
+                    />
+                  ))}
+                </div>
+                
+                {/* Send button - Mobile full width */}
+                <div className="bg-[#ffffff] box-border content-stretch flex h-[48px] items-center justify-center px-3 py-2 relative rounded-3xl shrink-0 w-full send-button">
+                  <button
+                    onClick={handleSubmit}
+                    disabled={isButtonDisabled}
+                    className="text-button-figma disabled:opacity-50 disabled:cursor-not-allowed w-full h-full"
+                  >
+                    <p className="leading-[16px] whitespace-pre">Enviar</p>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+          
+          {/* Question cards with horizontal scroll - Mobile */}
+          <motion.div 
+            className="question-cards-scroll w-full"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.8, 
+              ease: [0.25, 0.25, 0, 1],
+              delay: 1.2 
+            }}
+          >
+            {questionCards.map((card, index) => (
+              <motion.div
+                key={card.id}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ 
+                  duration: 0.6, 
+                  ease: [0.25, 0.25, 0, 1],
+                  delay: 1.4 + (index * 0.1) 
+                }}
+                whileHover={{ 
+                  scale: 1.02, 
+                  y: -5,
+                  transition: { duration: 0.1, ease: [0.25, 0.25, 0, 1] }
+                }}
+                whileTap={{ 
+                  scale: 0.98,
+                  transition: { duration: 0.05 }
+                }}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  
+                  // Prevenir cliques duplos para este card específico
+                  if (processingCards.has(card.id)) return
+                  
+                  // Adicionar card ao set de processamento
+                  setProcessingCards(prev => new Set(prev).add(card.id))
+                  onSendMessage(card.question, selectedTeams)
+                  
+                  // Reset após delay
+                  setTimeout(() => {
+                    setProcessingCards(prev => {
+                      const newSet = new Set(prev)
+                      newSet.delete(card.id)
+                      return newSet
+                    })
+                  }, 1000)
+                }}
+                className="question-card rounded-3xl relative cursor-pointer text-left"
+                style={{ 
+                  height: '8rem', /* 128px - altura reduzida para mobile */
+                  minHeight: '8rem',
+                  padding: '1.25rem 1rem',
+                  overflow: 'hidden',
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
+                  background: 'transparent',
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <p className="text-question-figma leading-[normal] w-full text-left text-[16px]">
+                  {card.question}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    )
+  }
+
+  // Desktop Layout (Original)
   return (
     <div className="content-stretch flex flex-col items-start justify-start relative size-full">
       <div className="bg-[#000000] box-border content-stretch flex flex-col min-h-screen items-center justify-between overflow-visible pb-10 pt-20 px-10 relative shrink-0 w-full">
@@ -240,14 +480,12 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
             }}
             whileHover={!isInputFocused ? { 
               scale: 1.01,
-              transition: { duration: 0.3, ease: [0.25, 0.25, 0, 1] }
+              transition: { duration: 0.15, ease: [0.25, 0.25, 0, 1] }
             } : undefined}
           >
             <div aria-hidden="true" className="absolute border-figma inset-0 pointer-events-none rounded-3xl" />
             <div className="flex-1 flex flex-col gap-8 relative">
               <div className="text-question-figma w-full relative">
-
-                
                 <textarea
                   ref={setInputRef}
                   value={inputQuestion}
@@ -397,11 +635,11 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
               whileHover={{ 
                 scale: 1.02, 
                 y: -5,
-                transition: { duration: 0.2, ease: [0.25, 0.25, 0, 1] }
+                transition: { duration: 0.1, ease: [0.25, 0.25, 0, 1] }
               }}
               whileTap={{ 
                 scale: 0.98,
-                transition: { duration: 0.1 }
+                transition: { duration: 0.05 }
               }}
               onMouseDown={(e) => {
                 e.preventDefault()

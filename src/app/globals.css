@@ -105,7 +105,7 @@ img {
 /* Card containers following Figma structure */
 .sports-gpt-card {
   padding: var(--spacing-cards);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -117,7 +117,7 @@ img {
   inset: 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.08) 100%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.15s ease;
   border-radius: 1.5rem;
 }
 
@@ -132,7 +132,7 @@ img {
 
 .sports-gpt-card:active {
   transform: translateY(-2px) scale(1.01);
-  transition-duration: 0.1s;
+  transition-duration: 0.05s;
 }
 
 .sports-gpt-card:focus-visible {
@@ -147,7 +147,7 @@ img {
   inset: 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.08) 100%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.15s ease;
   border-radius: 1.5rem;
   z-index: -1;
 }
@@ -163,7 +163,7 @@ img {
 
 .question-card:active {
   transform: translateY(-2px) scale(1.01);
-  transition-duration: 0.1s;
+  transition-duration: 0.05s;
 }
 
 /* Team logo button - exact Figma specifications */
@@ -173,7 +173,7 @@ img {
   border-radius: 2.20544rem; /* 35.287px */
   width: var(--team-logo-size);
   height: var(--team-logo-size);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -185,7 +185,7 @@ img {
   inset: 0;
   background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.15s ease;
 }
 
 .team-logo-button:hover {
@@ -200,7 +200,7 @@ img {
 
 .team-logo-button:active {
   transform: scale(0.78);
-  transition-duration: 0.1s;
+  transition-duration: 0.05s;
 }
 
 .team-logo-button.selected {
@@ -580,12 +580,259 @@ img {
    Responsive Design
    ========================================================================== */
 
+/* Mobile-first responsive design */
 @media (max-width: 768px) {
   :root {
-    --spacing-container: 1.5rem; /* 24px on mobile */
-    --spacing-cards: 1.5rem 1rem; /* 24px 16px on mobile */
-    --text-title: 1.75rem; /* 28px on mobile */
-    --text-question: 1.375rem; /* 22px on mobile */
+    --spacing-container: 1rem; /* 16px on mobile */
+    --spacing-cards: 1.25rem 1rem; /* 20px 16px on mobile */
+    --text-title: 1.5rem; /* 24px on mobile */
+    --text-question: 1.125rem; /* 18px on mobile */
+    --container-max-width: 100%; /* Full width on mobile */
+    --team-logo-size: 3.5rem; /* 56px on mobile */
+    --team-logo-inner: 1.75rem; /* 28px on mobile */
+  }
+
+  /* Mobile container adjustments */
+  .sports-gpt-container {
+    padding: var(--spacing-container);
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Mobile title adjustments */
+  .text-title-figma p.text-\[200px\] {
+    font-size: 3rem; /* 48px on mobile */
+    line-height: 1.1;
+    letter-spacing: -0.1rem;
+  }
+
+  /* Mobile card adjustments */
+  .sports-gpt-card {
+    padding: var(--spacing-cards);
+    min-height: 8rem; /* 128px on mobile */
+  }
+
+  /* Mobile team logo adjustments */
+  .team-logo-button {
+    width: var(--team-logo-size);
+    height: var(--team-logo-size);
+    padding: 0.875rem; /* 14px on mobile */
+    border-radius: 1.75rem; /* 28px on mobile */
+  }
+
+  /* Mobile question cards scroll container */
+  .question-cards-scroll {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    padding: 0.5rem 0;
+  }
+
+  .question-cards-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  .question-card {
+    flex: 0 0 calc(100vw - 2rem); /* Full width minus padding */
+    scroll-snap-align: start;
+    min-width: 280px;
+    max-width: 400px;
+  }
+
+  /* Mobile teams scroll container */
+  .teams-scroll-container {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .teams-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .team-logo-button {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  /* Mobile send button full width */
+  .send-button {
+    width: 100%;
+    height: 3rem; /* 48px */
+    border-radius: 1.5rem;
+    margin-top: 1rem;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Ensure send button text doesn't overflow */
+  .send-button button {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .send-button p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  /* Mobile suggestions adjustments */
+  .suggestion-container {
+    max-width: calc(100vw - 2rem);
+    left: 0;
+    right: 0;
+  }
+
+  /* Mobile textarea adjustments */
+  .text-question-figma textarea {
+    font-size: 1.125rem; /* 18px on mobile */
+    line-height: 1.4;
+    padding: 0.5rem 0;
+  }
+
+  /* Ensure mobile container doesn't overflow */
+  .sports-gpt-container > div {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Ensure flex containers don't overflow */
+  .flex.flex-col {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Ensure main container doesn't overflow */
+  .content-stretch {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  :root {
+    --spacing-container: 0.75rem; /* 12px on small mobile */
+    --text-title: 1.25rem; /* 20px on small mobile */
+    --text-question: 1rem; /* 16px on small mobile */
+    --team-logo-size: 3rem; /* 48px on small mobile */
+    --team-logo-inner: 1.5rem; /* 24px on small mobile */
+  }
+
+  .text-title-figma p.text-\[200px\] {
+    font-size: 2.5rem; /* 40px on small mobile */
+  }
+
+  .question-card {
+    flex: 0 0 calc(100vw - 1.5rem);
+    min-width: 260px;
+  }
+
+  .teams-scroll-container {
+    gap: 0.75rem;
+  }
+
+  .question-cards-scroll {
+    gap: 0.75rem;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --spacing-container: 2rem;
+    --text-title: 1.875rem; /* 30px on tablet */
+    --team-logo-size: 4rem; /* 64px on tablet */
+  }
+
+  .text-title-figma p.text-\[200px\] {
+    font-size: 4rem; /* 64px on tablet */
+  }
+}
+
+/* Desktop adjustments - ONLY for mobile-specific containers */
+@media (min-width: 1025px) {
+  /* Only apply scroll styles to mobile-specific containers */
+  .teams-scroll-container {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0.5rem 0;
+  }
+
+  .teams-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Scroll Improvements - ONLY for mobile containers
+   ========================================================================== */
+
+/* Smooth scrolling for all devices */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced scroll containers - ONLY for mobile-specific containers */
+.question-cards-scroll,
+.teams-scroll-container {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.question-cards-scroll::-webkit-scrollbar,
+.teams-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scroll snap improvements - ONLY for mobile containers */
+.question-cards-scroll .question-card,
+.teams-scroll-container .team-logo-button {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Touch-friendly scroll areas */
+@media (hover: none) and (pointer: coarse) {
+  .question-cards-scroll,
+  .teams-scroll-container {
+    padding: 1rem 0;
+    margin: -1rem 0;
   }
 }
 

@@ -49,11 +49,11 @@ export function TeamLogo({ teamId, isSelected, onClick, className = "" }: TeamLo
       title={teamId.charAt(0).toUpperCase() + teamId.slice(1).replace('-', ' ')}
       whileHover={{ 
         scale: 0.85,
-        transition: { duration: 0.2, ease: [0.25, 0.25, 0, 1] }
+        transition: { duration: 0.1, ease: [0.25, 0.25, 0, 1] }
       }}
       whileTap={{ 
         scale: 0.78,
-        transition: { duration: 0.1 }
+        transition: { duration: 0.05 }
       }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -67,7 +67,7 @@ export function TeamLogo({ teamId, isSelected, onClick, className = "" }: TeamLo
         className="h-[var(--team-logo-inner)] relative shrink-0 w-[var(--team-logo-inner)]"
         whileHover={{ 
           rotate: [0, -5, 5, 0],
-          transition: { duration: 0.4, ease: [0.25, 0.25, 0, 1] }
+          transition: { duration: 0.2, ease: [0.25, 0.25, 0, 1] }
         }}
       >
         <Image
