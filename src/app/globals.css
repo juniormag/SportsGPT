@@ -245,6 +245,16 @@ img {
   color: transparent;
 }
 
+/* Override for textarea to ensure text visibility */
+.text-question-figma textarea,
+.text-question-figma textarea * {
+  background: transparent !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
 .text-button-figma {
   font-family: var(--font-margem);
   font-weight: 400;
@@ -483,21 +493,27 @@ img {
   letter-spacing: var(--tracking-question);
   line-height: normal;
   background: transparent;
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
-  background-clip: unset;
-  -webkit-background-clip: unset;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: unset !important;
+  -webkit-background-clip: unset !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  position: relative;
 }
 
 .text-question-figma textarea.input-focused {
   transform: scale(1.01);
-  opacity: 1;
+  opacity: 1 !important;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 .text-question-figma textarea.text-from-suggestion {
-  opacity: 1;
+  opacity: 1 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 /* Suggestion container styling */
