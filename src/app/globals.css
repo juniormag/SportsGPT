@@ -599,6 +599,7 @@ img {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    overflow-x: visible;
   }
 
   /* Mobile title adjustments */
@@ -625,7 +626,7 @@ img {
   /* Mobile question cards scroll container */
   .question-cards-scroll {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
@@ -633,6 +634,9 @@ img {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     padding: 0.5rem 0;
+    margin: 0 -0.5rem; /* Negative margin to allow full scroll */
+    width: calc(100% + 1rem); /* Compensate for negative margin */
+    box-sizing: border-box;
   }
 
   .question-cards-scroll::-webkit-scrollbar {
@@ -640,16 +644,19 @@ img {
   }
 
   .question-card {
-    flex: 0 0 calc(100vw - 2rem); /* Full width minus padding */
+    flex: 0 0 calc(100vw - 1.5rem); /* Full width minus padding and margin */
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     min-width: 280px;
     max-width: 400px;
+    margin: 0 0.5rem; /* Add margin for spacing */
+    box-sizing: border-box;
   }
 
   /* Mobile teams scroll container */
   .teams-scroll-container {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
@@ -657,8 +664,8 @@ img {
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding: 0.5rem 0;
-    margin-bottom: 1rem;
-    width: 100%;
+    margin: 0 -0.5rem 1rem -0.5rem; /* Negative margin to allow full scroll */
+    width: calc(100% + 1rem); /* Compensate for negative margin */
     box-sizing: border-box;
   }
 
@@ -669,6 +676,7 @@ img {
   .team-logo-button {
     flex: 0 0 auto;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 
   /* Mobile send button full width */
@@ -718,6 +726,7 @@ img {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    overflow-x: visible;
   }
 
   /* Ensure flex containers don't overflow */
@@ -725,14 +734,16 @@ img {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    overflow-x: visible;
   }
 
-  /* Ensure main container doesn't overflow */
+  /* Ensure main container doesn't overflow but allows scroll */
   .content-stretch {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: visible;
+    overflow-y: visible;
   }
 }
 
@@ -753,14 +764,19 @@ img {
   .question-card {
     flex: 0 0 calc(100vw - 1.5rem);
     min-width: 260px;
+    margin: 0 0.25rem;
   }
 
   .teams-scroll-container {
     gap: 0.75rem;
+    margin: 0 -0.25rem 1rem -0.25rem;
+    width: calc(100% + 0.5rem);
   }
 
   .question-cards-scroll {
     gap: 0.75rem;
+    margin: 0 -0.25rem;
+    width: calc(100% + 0.5rem);
   }
 }
 
@@ -825,6 +841,32 @@ html {
 .teams-scroll-container .team-logo-button {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+/* Enhanced scroll behavior for question cards */
+.question-cards-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.question-cards-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Better touch scrolling for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .question-cards-scroll {
+    padding: 1rem 0;
+    margin: -1rem -0.5rem;
+    width: calc(100% + 1rem);
+  }
+  
+  .question-card {
+    margin: 0 0.5rem;
+    flex: 0 0 calc(100vw - 3rem);
+  }
 }
 
 /* Touch-friendly scroll areas */
