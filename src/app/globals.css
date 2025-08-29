@@ -1088,3 +1088,194 @@ html {
     transform: scale(1);
   }
 }
+
+/* ==========================================================================
+   Chat Interface Mobile Optimizations
+   ========================================================================== */
+
+/* Pulse effect for send button when enabled */
+@keyframes pulse-button {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Mobile touch improvements */
+@media (max-width: 640px) {
+  /* Prevent textarea zoom on iOS */
+  textarea {
+    font-size: 16px !important;
+    transform-origin: left top;
+  }
+  
+  /* Better touch targets */
+  button[type="submit"] {
+    min-height: 56px !important;
+    min-width: 56px !important;
+    width: 56px !important;
+    height: 56px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Force flex layout on mobile */
+  form {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: flex-end !important;
+  }
+  
+  form > div:first-child {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  
+  form > div:last-child {
+    flex-shrink: 0 !important;
+  }
+  
+  /* Subtle pulse for enabled send button */
+  .pulse-effect:not(:disabled):not(.opacity-50) {
+    animation: pulse-button 2s infinite;
+  }
+  
+  /* Improved focus states for mobile */
+  textarea:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+  }
+  
+  /* Prevent iOS zoom on input focus */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+  
+  /* Debug background for mobile */
+  .chat-input-mobile-debug {
+    background: rgba(255, 0, 0, 0.1) !important;
+  }
+}
+
+/* ==========================================================================
+   Chat Input Fix for Mobile
+   ========================================================================== */
+
+.chat-input-container {
+  display: flex !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+  width: 100% !important;
+}
+
+.chat-input-wrapper {
+  flex: 1 !important;
+  position: relative !important;
+  min-width: 0 !important;
+}
+
+.chat-textarea {
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  padding: 14px 16px !important;
+  color: white !important;
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  resize: none !important;
+  outline: none !important;
+  min-height: 56px !important;
+  max-height: 128px !important;
+  transition: all 0.2s ease !important;
+  overflow-wrap: break-word !important;
+  box-sizing: border-box !important;
+}
+
+.chat-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.chat-textarea.focused {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
+}
+
+.chat-send-button {
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.95)) !important;
+  color: #000000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+  outline: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  z-index: 10 !important;
+  position: relative !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.chat-send-button:hover:not(.disabled) {
+  transform: scale(1.05) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+  background: linear-gradient(135deg, #ffffff, #ffffff) !important;
+}
+
+.chat-send-button:active:not(.disabled) {
+  transform: scale(0.95) !important;
+}
+
+.chat-send-button.disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.6)) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.chat-send-button.enabled {
+  animation: pulse-button-enabled 2s infinite !important;
+}
+
+@keyframes pulse-button-enabled {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+.char-counter {
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  font-size: 12px !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-family: monospace !important;
+  display: none !important;
+}
+
+@media (min-width: 640px) {
+  .char-counter {
+    display: block !important;
+  }
+}

@@ -1,16 +1,17 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Send, ArrowLeft, Copy, CheckCircle2 } from "lucide-react"
+import { Send, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { ChatMessage } from "./chat-message"
+import { isChatAllowed } from "@/lib/rate-limit"
+import { validateChatMessage } from "@/lib/validation"
 
 interface Message {
   id: string
-  type: "user" | "assistant"
+  role: "user" | "assistant"
   content: string
-  timestamp: Date
-  isAnimating?: boolean
 }
 
 interface ChatInterfaceProps {
@@ -41,12 +42,12 @@ export function ChatInterface({ initialQuestion, selectedTeams, onBack }: ChatIn
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const messageIdCounter = useRef(0)
   const hasInitialized = useRef(false)
+  const messageIdCounter = useRef(0)
 
   const generateUniqueId = () => {
     messageIdCounter.current += 1
@@ -61,264 +62,150 @@ export function ChatInterface({ initialQuestion, selectedTeams, onBack }: ChatIn
     scrollToBottom()
   }, [messages])
 
-  const getTeamSpecificAnalysis = (teamName: string, teamId: string): string => {
-    // Análises personalizadas por time
-    const teamAnalyses = {
-      'corinthians': `🏟️ Análise Especializada - ${teamName}
+  const sendMessage = async (content: string) => {
+    if (!content.trim() || isLoading) return
 
-⚡ Próximos Jogos & Oportunidades:
-
-1. Vitória do Corinthians vs Fortaleza (Casa) - Odd: 1.65
-   - 85% de aproveitamento na Neo Química Arena
-   - Depay em grande fase: 8 gols nos últimos 6 jogos
-
-2. Over 1.5 gols do Corinthians - Odd: 2.10
-   - Média de 2.1 gols por jogo em casa
-   - Ataque mais efetivo com Yuri Alberto + Depay
-
-3. Ambos marcam vs Santos - Odd: 1.80
-   - Defesa ainda em ajuste (7 gols sofridos em 5 jogos)
-   - Santos sempre marca contra grandes
-
-🎯 Betbuilder Recomendado: Vitória Corinthians + Depay marca + Over 2.5 (Odd: 4.20)`,
-
-      'flamengo': `🔴⚫ Análise Especializada - ${teamName}
-
-🔥 Próximos Jogos & Oportunidades:
-
-1. Vitória do Flamengo vs Vasco (Casa) - Odd: 1.45
-   - Invencibilidade no Maracanã: 12 jogos
-   - Gabigol voltou a marcar (4 gols em 3 jogos)
-
-2. Over 2.5 gols no clássico - Odd: 1.90
-   - Média de 3.4 gols nos últimos confrontos
-   - Pedro + Gabigol = dupla mais letal do Brasil
-
-3. Flamengo vence ambos os tempos - Odd: 2.80
-   - Time costuma decidir jogos cedo
-   - 70% dos jogos ganhos por 2+ gols
-
-🎯 Betbuilder Recomendado: Vitória Flamengo + Pedro marca + Menos 3 cartões (Odd: 3.85)`,
-
-      'palmeiras': `🟢 Análise Especializada - ${teamName}
-
-🏆 Próximos Jogos & Oportunidades:
-
-1. Vitória do Palmeiras vs Red Bull Bragantino - Odd: 1.70
-   - 80% de vitórias contra times da parte de baixo
-   - Estêvão em grande momento: 6 assistências
-
-2. Under 2.5 gols - Odd: 1.95
-   - Defesa mais sólida: apenas 8 gols sofridos
-   - Jogo tradicionalmente pegado
-
-3. Raphael Veiga marca - Odd: 2.60
-   - Artilheiro da equipe em 2024
-   - Especialista em cobranças
-
-🎯 Betbuilder Recomendado: Vitória Palmeiras + Under 2.5 + Veiga marca (Odd: 5.10)`,
-
-      'sao-paulo': `🔴🔵⚪ Análise Especializada - ${teamName}
-
-⚡ Próximos Jogos & Oportunidades:
-
-1. Vitória do São Paulo vs Juventude (Casa) - Odd: 1.85
-   - Morumbis como fortaleza: 75% aproveitamento
-   - Lucas Moura inspirado: 5 gols em 4 jogos
-
-2. Over 1.5 gols São Paulo - Odd: 1.75
-   - Ataque mais entrosado com chegada de Calleri
-   - Média de 1.8 gols por jogo em casa
-
-3. São Paulo não perde + Over 1.5 - Odd: 1.60
-   - Apenas 1 derrota nos últimos 8 jogos
-   - Time equilibrado entre defesa e ataque
-
-🎯 Betbuilder Recomendado: Vitória São Paulo + Lucas marca + Menos 4 cartões (Odd: 4.45)`
+    // Validate message content
+    const validation = validateChatMessage(content)
+    if (!validation.isValid) {
+      setError(`📝 ${validation.error}`)
+      return
     }
 
-    return teamAnalyses[teamId as keyof typeof teamAnalyses] || 
-           `📊 Análise Especializada - ${teamName}
-
-⚡ Em desenvolvimento...
-
-Estou preparando uma análise completa e personalizada para o ${teamName}! 
-
-No momento, posso oferecer análises detalhadas para os principais times do brasileirão: Corinthians, Flamengo, Palmeiras e São Paulo.
-
-🔜 Em breve teremos análises específicas para todos os times, incluindo:
-   - Estatísticas de desempenho recente
-   - Odds e mercados recomendados  
-   - Análise tática e de jogadores
-   - Betbuilders personalizados
-
-Enquanto isso, posso ajudar com análises gerais ou perguntas sobre apostas esportivas!`
-  }
-
-  const simulateAIResponse = (userMessage: string): string => {
-    // Detectar se é uma pergunta específica de um time
-    const isTeamSpecific = selectedTeams?.length === 1
-    const teamId = isTeamSpecific ? selectedTeams[0] : null
-    const teamName = teamId ? teamId.charAt(0).toUpperCase() + teamId.slice(1).replace('-', ' ') : null
-    
-    // Respostas personalizadas por time
-    if (userMessage.toLowerCase().includes("oportunidades") && isTeamSpecific) {
-      return getTeamSpecificAnalysis(teamName!, teamId!)
-    }
-    
-    // Resposta geral para oportunidades
-    if (userMessage.toLowerCase().includes("oportunidades")) {
-      return `Com base na análise dos próximos jogos${selectedTeams?.length ? ` dos times selecionados` : ""}, aqui estão as melhores oportunidades para apostar:
-
-🎯 Principais Recomendações:
-
-1. Over 2.5 gols - Palmeiras vs Flamengo (Odd: 1.85)
-   - Histórico mostra média de 3.2 gols nos últimos confrontos
-   
-2. Vitória do Corinthians vs Santos (Odd: 2.10)
-   - Time mandante com 80% de aproveitamento em casa
-   
-3. Ambos marcam - São Paulo vs Atlético-MG (Odd: 1.70)
-   - Ambas equipes marcaram em 6 dos últimos 8 jogos
-
-💡 Dica Especial: Combine essas apostas em um betbuilder para odds mais atrativas!
-
-Gostaria de mais detalhes sobre alguma dessas oportunidades?`
-    }
-    
-    if (userMessage.toLowerCase().includes("depay")) {
-      return `📊 Análise: Memphis Depay marcar gol
-
-Probabilidade estimada: 65%
-
-Fatores considerados:
-- Média de 0.8 gols por jogo na temporada
-- 12 gols em 15 jogos pelo Corinthians
-- Histórico contra o próximo adversário: 3 gols em 4 confrontos
-
-Odds recomendadas:
-- Depay marcar a qualquer momento: 1.75
-- Depay primeiro gol: 4.50
-- Depay 2+ gols: 8.00
-
-Contexto tático: O time tem jogado com Depay mais próximo da área, aumentando suas chances de finalização.
-
-Quer que eu analise outros mercados do Depay?`
-    }
-    
-    if (userMessage.toLowerCase().includes("betbuilder") || userMessage.toLowerCase().includes("brasileiro")) {
-      return `🏆 Melhor BetBuilder - Campeonato Brasileiro
-
-Combinação Recomendada (Odd: 4.85):
-
-1. Palmeiras vence vs Atlético-GO (1.45)
-2. Over 1.5 gols no jogo (1.25)
-3. Raphael Veiga marca (2.30)
-4. Menos de 4 cartões (1.15)
-
-Por que essa combinação:
-- Palmeiras tem 85% de vitórias contra times da zona de rebaixamento
-- Veiga é o artilheiro da equipe com média de 0.6 gols/jogo
-- Jogos do Palmeiras têm média baixa de cartões (2.3 por jogo)
-
-Alternativa mais conservadora (Odd: 2.90):
-- Palmeiras ou empate + Over 0.5 gols + Menos de 6 escanteios
-
-Qual estratégia prefere: mais arriscada ou conservadora?`
+    // Check rate limiting
+    const rateLimitCheck = isChatAllowed()
+    if (!rateLimitCheck.allowed) {
+      setError(`⏱️ Limite de mensagens atingido. Tente novamente em ${rateLimitCheck.resetTime} segundos.`)
+      return
     }
 
-    if (userMessage.toLowerCase().includes("são paulo") || userMessage.toLowerCase().includes("sao paulo")) {
-      return `⚽ Análise: Melhores mercados - São Paulo
-
-Próximos 3 jogos:
-1. São Paulo vs Fortaleza (Casa)
-2. Athletico-PR vs São Paulo (Fora) 
-3. São Paulo vs Palmeiras (Casa)
-
-Mercados mais lucrativos:
-
-🎯 Vitória São Paulo vs Fortaleza (Odd: 1.95)
-- 70% de aproveitamento em casa
-- Fortaleza com 3 derrotas seguidas fora
-
-📈 Over 2.5 gols vs Athletico-PR (Odd: 2.10)
-- Athletico tem a pior defesa como mandante
-- São Paulo marcou em 8 dos últimos 10 jogos
-
-🔥 Lucas marcar em qualquer jogo (Odd: 2.40)
-- Artilheiro da equipe com 18 gols
-- Média de 0.75 gols por jogo
-
-Estratégia recomendada: Aposte na vitória contra times mais fracos e explore mercados de gols nos jogos equilibrados.
-
-Quer análise detalhada de algum jogo específico?`
-    }
-
-    return `Obrigado pela sua pergunta! Como assistente de apostas esportivas, estou aqui para ajudar com análises e recomendações.
-
-Posso fornecer informações sobre:
-- Análises de jogos e mercados
-- Estatísticas de times e jogadores  
-- Estratégias de apostas
-- Odds e probabilidades
-
-Como posso ajudar você com suas apostas esportivas hoje?`
-  }
-
-  const handleSendMessage = async (messageContent?: string, isInitial = false) => {
-    const content = messageContent || input.trim()
-    if (!content) return
+    // Use sanitized content
+    const sanitizedContent = validation.sanitized || content.trim()
 
     const userMessage: Message = {
       id: generateUniqueId(),
-      type: "user",
-      content,
-      timestamp: new Date(),
-      isAnimating: true
+      role: "user",
+      content: sanitizedContent,
     }
 
     setMessages(prev => [...prev, userMessage])
-    if (!isInitial) {
-      setInput("")
-      // Auto-resize textarea
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto'
-      }
-    }
+    setInput("")
     setIsLoading(true)
+    setError(null)
 
-    // Remove animation after a short delay
-    setTimeout(() => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === userMessage.id ? { ...msg, isAnimating: false } : msg
-      ))
-    }, 300)
+    // Auto-resize textarea
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+    }
 
-    // Simulate AI response delay
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: generateUniqueId(),
-        type: "assistant",
-        content: simulateAIResponse(content),
-        timestamp: new Date(),
-        isAnimating: true
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            ...messages.map(msg => ({ role: msg.role, content: msg.content })),
+            { role: 'user', content: sanitizedContent }
+          ],
+          teams: selectedTeams || [],
+        }),
+      })
+
+      if (!response.ok) {
+        let errorMessage = 'Erro de conexão'
+        
+        try {
+          const errorText = await response.text()
+          if (response.status === 429) {
+            errorMessage = '⏱️ Muitas requisições. Tente novamente em alguns segundos.'
+          } else if (response.status === 503) {
+            errorMessage = '🚧 Serviço temporariamente indisponível. Tente novamente mais tarde.'
+          } else if (response.status === 500) {
+            errorMessage = '⚠️ Erro interno do servidor. Nossa equipe foi notificada.'
+          } else if (response.status === 401) {
+            errorMessage = '🔑 Erro de autenticação. Verifique a configuração da API.'
+          } else {
+            errorMessage = errorText || `Erro HTTP ${response.status}`
+          }
+        } catch {
+          errorMessage = `Erro de rede (${response.status}). Verifique sua conexão.`
+        }
+        
+        throw new Error(errorMessage)
       }
-      setMessages(prev => [...prev, aiResponse])
-      setIsLoading(false)
+
+      if (!response.body) {
+        throw new Error('🔌 Resposta vazia do servidor. Tente novamente.')
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let assistantContent = ""
+
+      const assistantMessage: Message = {
+        id: generateUniqueId(),
+        role: "assistant",
+        content: "",
+      }
+
+      setMessages(prev => [...prev, assistantMessage])
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value, { stream: true })
+          assistantContent += chunk
+
+          setMessages(prev => prev.map(msg => 
+            msg.id === assistantMessage.id 
+              ? { ...msg, content: assistantContent }
+              : msg
+          ))
+        }
+
+        // Verificar se a resposta está vazia
+        if (!assistantContent.trim()) {
+          throw new Error('🤖 Resposta vazia da IA. Tente reformular sua pergunta.')
+        }
+
+      } catch (streamError) {
+        console.error('Stream error:', streamError)
+        setMessages(prev => prev.filter(msg => msg.id !== assistantMessage.id))
+        throw new Error('📡 Erro na transmissão de dados. Tente novamente.')
+      }
+
+    } catch (error) {
+      console.error('Chat error:', error)
+      let userFriendlyMessage = 'Erro desconhecido'
       
-      // Remove animation after a short delay
-      setTimeout(() => {
-        setMessages(prev => prev.map(msg => 
-          msg.id === aiResponse.id ? { ...msg, isAnimating: false } : msg
-        ))
-      }, 300)
-    }, 1500)
+      if (error instanceof TypeError) {
+        userFriendlyMessage = '🌐 Erro de rede. Verifique sua conexão com a internet.'
+      } else if (error instanceof Error) {
+        userFriendlyMessage = error.message
+      }
+      
+      setError(userFriendlyMessage)
+      
+      // Remover a mensagem do usuário se houve erro
+      setMessages(prev => prev.filter(msg => msg.id !== userMessage.id))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    sendMessage(input)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      handleSendMessage()
+      sendMessage(input)
     }
   }
 
@@ -331,20 +218,14 @@ Como posso ajudar você com suas apostas esportivas hoje?`
     textarea.style.height = Math.min(textarea.scrollHeight, 128) + 'px'
   }
 
-  const copyToClipboard = async (text: string, messageId: string) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopiedMessageId(messageId)
-      setTimeout(() => setCopiedMessageId(null), 2000)
-    } catch (err) {
-      console.error('Failed to copy text: ', err)
-    }
-  }
-
   useEffect(() => {
     if (initialQuestion && !hasInitialized.current) {
       hasInitialized.current = true
-      handleSendMessage(initialQuestion, true)
+      setInput(initialQuestion)
+      // Enviar automaticamente a pergunta inicial
+      setTimeout(() => {
+        sendMessage(initialQuestion)
+      }, 500)
     }
   }, [])
 
@@ -394,7 +275,7 @@ Como posso ajudar você com suas apostas esportivas hoje?`
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4">
         <div className="max-w-4xl mx-auto space-y-6 px-2 sm:px-0">
-          {messages.length === 0 && (
+          {messages.length === 0 && !isLoading && (
             <div className="text-center py-16 text-white/60">
               <div className="max-w-md mx-auto space-y-6 animate-in fade-in-0 duration-500">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center mx-auto shadow-lg animate-in zoom-in-50 duration-700 delay-200">
@@ -408,57 +289,8 @@ Como posso ajudar você com suas apostas esportivas hoje?`
             </div>
           )}
           
-          {messages.map((message, index) => (
-            <div
-              key={message.id}
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} group ${
-                message.isAnimating ? 'animate-in slide-in-from-bottom-2 duration-500 ease-out' : ''
-              }`}
-              style={{ animationDelay: message.isAnimating ? `${index * 100}ms` : '0ms' }}
-            >
-              <div
-                className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-5 py-4 relative transition-all duration-300 cubic-bezier(0.4, 0, 0.2, 1) ${
-                  message.type === 'user'
-                    ? 'bg-gradient-to-br from-white to-white/95 text-black shadow-lg hover:shadow-xl hover:scale-[1.02] border border-white/20'
-                    : 'bg-gradient-to-br from-white/8 to-white/4 text-white backdrop-blur-sm border border-white/5 hover:from-white/10 hover:to-white/6 hover:border-white/10 hover:shadow-lg'
-                }`}
-                style={{
-                  boxShadow: message.type === 'user' 
-                    ? '0 8px 32px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.1)'
-                    : '0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.02)'
-                }}
-              >
-                <div className="whitespace-pre-wrap leading-relaxed text-[15px] font-normal">{message.content}</div>
-                <div className="flex items-center justify-between mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                  <div className={`text-xs font-medium tracking-wide ${
-                    message.type === 'user' ? 'text-black/50' : 'text-white/50'
-                  }`}>
-                    {message.timestamp.toLocaleTimeString('pt-BR', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
-                    })}
-                  </div>
-                  {message.type === 'assistant' && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyToClipboard(message.content, message.id)}
-                      className={`h-7 w-7 p-0 rounded-lg transition-all duration-300 hover:bg-white/20 hover:scale-110 active:scale-95 ${
-                        copiedMessageId === message.id 
-                          ? 'opacity-100 bg-green-500/20' 
-                          : 'opacity-70 hover:opacity-100'
-                      }`}
-                    >
-                      {copiedMessageId === message.id ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
-                      ) : (
-                        <Copy className="h-3.5 w-3.5" />
-                      )}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
+          {messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
           ))}
           
           {isLoading && (
@@ -480,6 +312,48 @@ Como posso ajudar você com suas apostas esportivas hoje?`
               </div>
             </div>
           )}
+
+          {error && (
+            <div className="flex justify-start animate-in slide-in-from-bottom-2 duration-300">
+              <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl px-5 py-4 max-w-[85%] backdrop-blur-sm">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center mt-0.5">
+                    <span className="text-red-400 text-sm">!</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm leading-relaxed">{error}</p>
+                    <div className="flex gap-2 mt-3">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => {
+                          setError(null)
+                          if (messages.length > 0 && messages[messages.length - 1]?.role === 'user') {
+                            // Tentar reenviar a última mensagem do usuário
+                            const lastUserMessage = messages[messages.length - 1]
+                            setMessages(prev => prev.slice(0, -1)) // Remove a última mensagem
+                            setTimeout(() => sendMessage(lastUserMessage.content), 500)
+                          }
+                        }}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-xs h-7"
+                        disabled={isLoading}
+                      >
+                        🔄 Tentar novamente
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setError(null)}
+                        className="text-red-400/70 hover:text-red-300 text-xs h-7"
+                      >
+                        ✕ Fechar
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           
           <div ref={messagesEndRef} />
         </div>
@@ -488,8 +362,8 @@ Como posso ajudar você com suas apostas esportivas hoje?`
       {/* Input */}
       <div className="border-t border-white/10 p-4 backdrop-blur-sm bg-black/80">
         <div className="max-w-4xl mx-auto px-2 sm:px-0">
-          <div className="flex gap-3 items-end">
-            <div className="flex-1 relative">
+          <div className="chat-input-container">
+            <div className="chat-input-wrapper">
               <textarea
                 ref={textareaRef}
                 value={input}
@@ -498,41 +372,32 @@ Como posso ajudar você com suas apostas esportivas hoje?`
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 placeholder="Digite sua pergunta sobre apostas esportivas..."
-                className={`w-full bg-white/8 border rounded-2xl px-4 py-3 text-white placeholder:text-white/60 resize-none focus:outline-none transition-all duration-200 min-h-[52px] max-h-32 leading-relaxed ${
-                  isFocused 
-                    ? 'border-white/30 bg-white/12 focus:ring-2 focus:ring-white/10 shadow-lg' 
-                    : 'border-white/20 hover:border-white/25 hover:bg-white/10'
-                }`}
+                className={`chat-textarea ${isFocused ? 'focused' : ''}`}
                 rows={1}
                 disabled={isLoading}
               />
               {input && (
-                <div className="absolute bottom-2 right-2 text-xs text-white/40 font-mono">
+                <div className="char-counter">
                   {input.length}
                 </div>
               )}
             </div>
-            <Button
-              onClick={() => handleSendMessage()}
+            <button
+              type="button"
+              onClick={() => sendMessage(input)}
               disabled={!input.trim() || isLoading}
-              className={`bg-gradient-to-br from-white to-white/95 text-black hover:from-white hover:to-white/98 hover:scale-105 active:scale-95 rounded-xl p-3 h-[56px] min-w-[56px] transition-all duration-300 cubic-bezier(0.4, 0, 0.2, 1) border border-white/20 ${
-                !input.trim() || isLoading 
-                  ? 'opacity-50 cursor-not-allowed hover:scale-100 from-white/70 to-white/60' 
-                  : 'hover:shadow-xl shadow-lg'
-              }`}
-              style={{
-                boxShadow: (!input.trim() || isLoading) 
-                  ? '0 4px 16px rgba(0, 0, 0, 0.1)'
-                  : '0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.2)'
-              }}
+              className={`chat-send-button ${!input.trim() || isLoading ? 'disabled' : 'enabled'}`}
             >
-              <Send className={`h-5 w-5 transition-all duration-300 ${
-                input.trim() && !isLoading ? 'group-hover:translate-x-0.5 group-hover:scale-110' : ''
-              }`} />
-            </Button>
+              <Send size={20} strokeWidth={2} />
+            </button>
           </div>
-          <div className="mt-2 text-xs text-white/50 text-center">
+          {/* Desktop help text */}
+          <div className="mt-2 text-xs text-white/50 text-center hidden sm:block">
             Pressione Enter para enviar • Shift + Enter para quebrar linha
+          </div>
+          {/* Mobile help text */}
+          <div className="mt-2 text-xs text-white/50 text-center block sm:hidden">
+            Toque no ícone para enviar sua mensagem
           </div>
         </div>
       </div>

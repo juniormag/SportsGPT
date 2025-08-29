@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ChevronRight } from "lucide-react"
 import { motion, AnimatePresence, useInView } from "motion/react"
 import { TeamLogo } from "@/components/team-logos"
+import { ChatInterface } from "@/components/chat-interface"
 
 interface Team {
   id: string
@@ -79,6 +80,8 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false)
   const [processingCards, setProcessingCards] = useState<Set<string>>(new Set())
   const [isMobile, setIsMobile] = useState(false)
+  const [isChatMode, setIsChatMode] = useState(false)
+  const [chatInitialQuestion, setChatInitialQuestion] = useState("")
   
   const defaultPlaceholder = "Quais as melhores oportunidades para a próxima semana?"
   
@@ -110,7 +113,9 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
 
   const handleSubmit = () => {
     if (questionToSend) {
-      onSendMessage(questionToSend, selectedTeams)
+      // Iniciar modo chat em vez de enviar diretamente
+      setChatInitialQuestion(questionToSend)
+      setIsChatMode(true)
     }
   }
 
@@ -190,6 +195,26 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  // Se está no modo chat, renderizar a interface de chat
+  if (isChatMode) {
+    return (
+      <div className="content-stretch flex flex-col items-center justify-center relative size-full p-4">
+        <div className="w-full max-w-4xl">
+          <ChatInterface
+            selectedTeams={selectedTeams}
+            initialQuestion={chatInitialQuestion}
+            onBack={() => {
+              setIsChatMode(false)
+              setChatInitialQuestion("")
+              // Reset processing cards
+              setProcessingCards(new Set())
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
 
   // Mobile Layout
   if (isMobile) {
@@ -397,7 +422,10 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
                   
                   // Adicionar card ao set de processamento
                   setProcessingCards(prev => new Set(prev).add(card.id))
-                  onSendMessage(card.question, selectedTeams)
+                  
+                  // Iniciar chat com a pergunta do card
+                  setChatInitialQuestion(card.question)
+                  setIsChatMode(true)
                   
                   // Reset após delay
                   setTimeout(() => {
@@ -649,7 +677,10 @@ export function LandingPage({ onSendMessage }: LandingPageProps) {
                 
                 // Adicionar card ao set de processamento
                 setProcessingCards(prev => new Set(prev).add(card.id))
-                onSendMessage(card.question, selectedTeams)
+                
+                // Iniciar chat com a pergunta do card
+                setChatInitialQuestion(card.question)
+                setIsChatMode(true)
                 
                 // Reset após delay
                 setTimeout(() => {
